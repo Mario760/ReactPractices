@@ -15,14 +15,15 @@ export default function ColorPicker(){
     ];
 
     const handleClick = (color) => {
-        setSelectedColor({hex: color.hex, name: color.name});
         setFocusedIndex(colors.indexOf(color));
+        setSelectedColor({hex: color.hex, name: color.name});
     };
 
     const handleMouseEnter = (hex) => {
         const color = colors.find((c) => c.hex === hex);
         if (color) {
-            setSelectedColor({ hex: color.hex, name: hex });
+            setFocusedIndex(colors.indexOf(color));
+            setSelectedColor({hex: hex, name: hex})
         }
     };
 
@@ -33,23 +34,21 @@ export default function ColorPicker(){
 
     const handleFocus = (index) => {
         setFocusedIndex(index);
-        setSelectedColor({ hex: colors[index].hex, name: colors[index].name });
     };
     
     const handleBlur = () => {
         setFocusedIndex(null);
-        setSelectedColor({ hex: null, name: null });
     };
     
     const handleKeyDown = (e, index) => {
-        let newIndex = index;
-        if (e.key === "Enter"){
-            setSelectedColor({ hex: colors[index].hex, name: colors[index].name });
+        let newIndex = focusedIndex;
+        if (e.key === "ArrowLeft" && newIndex > 0) {
+            newIndex = newIndex - 1;
+        } else if (e.key === "ArrowRight" && newIndex < colors.length - 1) {
+            newIndex = newIndex + 1;
+        } else if (e.key === "Enter"){
+            setSelectedColor({ hex: colors[focusedIndex].hex, name: colors[focusedIndex].name });
             return;
-        }else if(e.key === "ArrowLeft" && index>0 ){
-            newIndex = newIndex-1;
-        }else if(e.key === "ArrowRight" && index < colors.length-1 ){
-            newIndex = newIndex+1
         }
         setFocusedIndex(newIndex);
     };
