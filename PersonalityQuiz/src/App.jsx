@@ -71,7 +71,7 @@ function App() {
   
   async function fetchArtwork(elementKeyword){
     try{
-      const searchResponse = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?q=${elementKeyword}`);
+      const searchResponse = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?q=${elementKeyword}`,{mode:"cors"});
       const searchData = await searchResponse.json();
       if (!searchData.objectIDs || searchData.objectIDs.length === 0) {
         setArtwork(null);
@@ -80,7 +80,7 @@ function App() {
 
       const randomObjectId = searchData.objectIDs[Math.floor(Math.random() * searchData.objectIDs.length)];
 
-      const objectResponse = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomObjectId}`);
+      const objectResponse = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomObjectId}`,{mode:"cors"});
       const objectData = await objectResponse.json();
 
       setArtwork(objectData);
