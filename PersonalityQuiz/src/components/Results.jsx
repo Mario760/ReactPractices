@@ -4,7 +4,7 @@ import { UserContext } from "./UserContext";
 
 export default function Results({ element, artwork }) {
   // reference the context for the "name".
-    const name = useContext(UserContext);
+    const { name } = useContext(UserContext);
 
     return (
         <div>

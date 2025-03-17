@@ -5,12 +5,19 @@ import Question from "./components/Question";
 import Results from "./components/Results";
 import UserForm from './components/UserForm';
 import {Routes, Route} from "react-router-dom";
+import "./style.css";
 
 function App() {
   const questions = [
     {
       question: "What's your favorite color?",
       options: ["Red 🔴", "Blue 🔵", "Green 🟢", "Yellow 🟡"],
+    },{
+      question: "What's your favorite hobby?",
+      options: ["Reading 📚", "Sports 🏈", "Gaming 🕹️", "Traveling 🚀"],
+    },{
+      question: "What's your favorite season?",
+      options: ["Summer 🌞", "Winter ☃️", "Spring 🌷", "Autumn 🍂"],
     },
   ];
 
@@ -26,7 +33,14 @@ function App() {
     "Blue 🔵": "Water",
     "Green 🟢": "Earth",
     "Yellow 🟡": "Air",
-    // Continue mapping all your possible options to a keyword
+    "Reading 📚": "Water", 
+    "Sports 🏈": "Fire", 
+    "Gaming 🕹️": "Earth", 
+    "Traveling 🚀": "Air",
+    "Summer 🌞": "Fire",
+    "Winter ☃️": "Water", 
+    "Spring 🌷": "Earth", 
+    "Autumn 🍂": "Air",
   };
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -54,6 +68,27 @@ function App() {
       return counts[a] > counts[b] ? a : b
     });
   };
+  
+  async function fetchArtwork(elementKeyword){
+    try{
+      const searchResponse = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/search?q=${elementKeyword}`);
+      const searchData = await searchResponse.json();
+      if (!searchData.objectIDs || searchData.objectIDs.length === 0) {
+        setArtwork(null);
+        return;
+      }
+
+      const randomObjectId = searchData.objectIDs[Math.floor(Math.random() * searchData.objectIDs.length)];
+
+      const objectResponse = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomObjectId}`);
+      const objectData = await objectResponse.json();
+
+      setArtwork(objectData);
+
+    }catch(error){
+      throw Error("Fetch Data Incorrectly!");
+    }
+  };
 
   useEffect(
     function () {
@@ -68,7 +103,7 @@ function App() {
 
   return (
     <div>
-      <UserProvider value={{name:userName, setName:setUserName}} />
+      <UserProvider value={{name:userName, setName:setUserName}}>
       <Header />
       <Routes>
         <Route path="/" element={<UserForm onSubmit={handleUserFormSubmit} />} />
@@ -83,6 +118,7 @@ function App() {
           }
         />
       </Routes>
+      </UserProvider>
     </div>
   );
 }

@@ -16,8 +16,8 @@ export default function UserForm() {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-            <p>Name:</p><br />
-            <input type="text" id="inputName" name="inputName" /> <br />
+            <p style={{textAlign:"left"}}>Name:</p>
+            <input type="text" id="inputName" name="inputName" onChange={(e) => {setInputName(e.target.value)}}/> <br />
             <input type="submit" value="Start Quiz" />
             </form>
         </div>
